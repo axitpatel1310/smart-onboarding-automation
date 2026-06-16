@@ -1,0 +1,392 @@
+{
+  "name": "On-Boarding Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// City selected in the Google Form\nconst selectedCity = $('First Node').last().json.City;\n\nconst form_filler = $('First Node').last().json['Email']\n\n// Employees sheet\nconst employees = $items(\"List\");\n\n// Threshold sheet\nconst thresholds = $items(\"Threshold\");\n\n// Count employees in selected city\nconst employeeCount = employees.filter(employee =>\n  employee.json.City === selectedCity\n).length;\n\n// Find threshold for selected city\nconst cityThresholdRow = thresholds.find(threshold =>\n  threshold.json.City === selectedCity\n);\n\nconst threshold = cityThresholdRow\n  ? Number(cityThresholdRow.json.Threshold)\n  : 0;\n\n// Compare\nconst capacityAvailable = employeeCount < threshold;\n\nconst formData = $('First Node').last().json;\n\n\nreturn [{\n  ...formData,\n  city: selectedCity,\n  currentEmployees: employeeCount,\n  threshold,\n  availableSpots: threshold - employeeCount,\n  capacityAvailable,\n  form_filler\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        96,
+        -192
+      ],
+      "id": "4375c6e6-7344-49dd-9e4a-54d7622c4d8b",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1KOxPxy31_gyH3EE4BXejDmajV8gmq4nkXLOCUuqX_-w",
+          "mode": "list",
+          "cachedResultName": "Employees List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KOxPxy31_gyH3EE4BXejDmajV8gmq4nkXLOCUuqX_-w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KOxPxy31_gyH3EE4BXejDmajV8gmq4nkXLOCUuqX_-w/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -256,
+        -192
+      ],
+      "id": "85c8ece7-7ab3-4a1d-85f4-7308629a4d69",
+      "name": "List",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "wOMjpDAwPtzXsunZ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1KOxPxy31_gyH3EE4BXejDmajV8gmq4nkXLOCUuqX_-w",
+          "mode": "list",
+          "cachedResultName": "Employees List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KOxPxy31_gyH3EE4BXejDmajV8gmq4nkXLOCUuqX_-w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 939341865,
+          "mode": "list",
+          "cachedResultName": "Threshold",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KOxPxy31_gyH3EE4BXejDmajV8gmq4nkXLOCUuqX_-w/edit#gid=939341865"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -80,
+        -192
+      ],
+      "id": "d14d4fa7-6a1f-49d7-95ac-16aaac304d1d",
+      "name": "Threshold",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "wOMjpDAwPtzXsunZ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d61df883-65b6-42d7-8a06-7c4f48075b3e",
+              "leftValue": "={{ $json.capacityAvailable }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -416,
+        128
+      ],
+      "id": "c1b00328-9ddc-41b2-ba8c-2447a9b17f71",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "=On boarding for {{ $json['Type of Contract'] }} Contract",
+        "emailType": "text",
+        "message": "=This is an automated message for you {{ $json.Name }} being sent to you. You'll find an questionaire attached to this email. \n\nFill it all the necessary information and reply it back to the email. \n\nTo confirm the information \nyou are currently applying for {{ $json.City }}\nfor {{ $json['Type of Contract'] }} contract.\n\nWe have {{ $json.availableSpots }} right now in  so, you can recommend someone if you'd like.\n\nif you find anything confusing email on support@on-boarding.gmail.com\n\nThank you.\n\nKind regard, \nOn-boarding Process ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -112,
+        48
+      ],
+      "id": "9848c842-0f96-46fa-b1c2-24b9ece57287",
+      "name": "Send a message",
+      "webhookId": "ae5630d7-1bac-47a8-b762-db3f3224ed68",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "JNRivC1BqHNhe5ZB",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "We are Really Sorry",
+        "emailType": "text",
+        "message": "=Hello, {{ $json.Name }}\n\nCurrently we are full in  however, if are adding you in our queue when we have opeings we'll for sure contact you. \n\nThank you and have a good day\n\nKind regard, \non-boarding Process",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -112,
+        256
+      ],
+      "id": "68ac5540-2cb4-40e8-ae64-8332488ebf37",
+      "name": "Send a message1",
+      "webhookId": "f63f5be7-583f-4ab0-abce-f1b2d5265722",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "JNRivC1BqHNhe5ZB",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "18j-eN0Q6WVugWWKVaXZkGe1EO6CmGNy4bOHnzJvFiJ8",
+          "mode": "list",
+          "cachedResultName": "Employees_Queue",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18j-eN0Q6WVugWWKVaXZkGe1EO6CmGNy4bOHnzJvFiJ8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18j-eN0Q6WVugWWKVaXZkGe1EO6CmGNy4bOHnzJvFiJ8/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Contract ": "={{ $('If').item.json['Type of Contract'] }}",
+            "Name": "={{ $('If').item.json.Name }}",
+            "City": "={{ $('If').item.json.city }}",
+            "Contacted": "={{ $('If').item.json.Timestamp }}",
+            "email": "={{ $('If').item.json.Email }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "City",
+              "displayName": "City",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Contacted",
+              "displayName": "Contacted",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Contract ",
+              "displayName": "Contract ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        160,
+        256
+      ],
+      "id": "37b7bcaa-38a8-4d60-bf39-9a13c3e35a36",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "wOMjpDAwPtzXsunZ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1IwtdoiY5jYYp8Nn1WB5P7lOwLtfrhaKHbw15z63n0uI",
+          "mode": "list",
+          "cachedResultName": "Form Fillers",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IwtdoiY5jYYp8Nn1WB5P7lOwLtfrhaKHbw15z63n0uI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 699258837,
+          "mode": "list",
+          "cachedResultName": "Form responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IwtdoiY5jYYp8Nn1WB5P7lOwLtfrhaKHbw15z63n0uI/edit#gid=699258837"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -432,
+        -192
+      ],
+      "id": "97e8c4f8-7e6f-4302-be96-0fabb615e3ea",
+      "name": "First Node",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "fSheC3T8FxsgquM7",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "List": {
+      "main": [
+        [
+          {
+            "node": "Threshold",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Threshold": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message1": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "First Node": {
+      "main": [
+        [
+          {
+            "node": "List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "39765605-11ef-4076-b2ce-32de0cfdec6f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5bfc75bda0a796120f60112e1f8154cddf837d4498cfaaf2bf11ff28f6bf4741"
+  },
+  "id": "pzo4AbpGIbL5f5LB",
+  "tags": []
+}
