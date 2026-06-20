@@ -1,5 +1,5 @@
 {
-  "name": "On-Boarding Workflow",
+  "name": "On-Boarding Workflow level 1",
   "nodes": [
     {
       "parameters": {
@@ -8,10 +8,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        96,
-        -192
+        432,
+        16
       ],
-      "id": "4375c6e6-7344-49dd-9e4a-54d7622c4d8b",
+      "id": "34161389-efee-46ac-9a78-203f8d83d411",
       "name": "Code in JavaScript"
     },
     {
@@ -35,14 +35,14 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -256,
-        -192
+        -32,
+        16
       ],
-      "id": "85c8ece7-7ab3-4a1d-85f4-7308629a4d69",
+      "id": "017d3dd5-de1c-40ad-b207-5a941b6034e8",
       "name": "List",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "wOMjpDAwPtzXsunZ",
+          "id": "VKyFfaqQkmtOKWAH",
           "name": "Google Sheets account"
         }
       }
@@ -68,14 +68,14 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -80,
-        -192
+        192,
+        16
       ],
-      "id": "d14d4fa7-6a1f-49d7-95ac-16aaac304d1d",
+      "id": "0ebd3c94-99cd-40bf-9e49-32bb1b947c1b",
       "name": "Threshold",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "wOMjpDAwPtzXsunZ",
+          "id": "VKyFfaqQkmtOKWAH",
           "name": "Google Sheets account"
         }
       }
@@ -107,10 +107,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -416,
-        128
+        -272,
+        272
       ],
-      "id": "c1b00328-9ddc-41b2-ba8c-2447a9b17f71",
+      "id": "d1b02788-535d-4b4d-ad39-045a292231e7",
       "name": "If"
     },
     {
@@ -118,21 +118,21 @@
         "sendTo": "={{ $json.Email }}",
         "subject": "=On boarding for {{ $json['Type of Contract'] }} Contract",
         "emailType": "text",
-        "message": "=This is an automated message for you {{ $json.Name }} being sent to you. You'll find an questionaire attached to this email. \n\nFill it all the necessary information and reply it back to the email. \n\nTo confirm the information \nyou are currently applying for {{ $json.City }}\nfor {{ $json['Type of Contract'] }} contract.\n\nWe have {{ $json.availableSpots }} right now in  so, you can recommend someone if you'd like.\n\nif you find anything confusing email on support@on-boarding.gmail.com\n\nThank you.\n\nKind regard, \nOn-boarding Process ",
+        "message": "=This is an automated message for you {{ $json.Name }} being sent to you. You'll find an questionaire attached to this email. \n\nFill it all the necessary information and reply it back to the email. \n\nDownload it from here: https://drive.google.com/file/d/1c1p-AV3hmUaZ395nCSWqcgzTzKpBMUyB/view?usp=sharing\n\nTo confirm the information \nyou are currently applying for {{ $json.City }}\nfor {{ $json['Type of Contract'] }} contract.\n\nWe have {{ $json.availableSpots }} right now in  so, you can recommend someone if you'd like.\n\nif you find anything confusing email on support@on-boarding.gmail.com\n\nThank you.\n\nKind regard, \nOn-boarding Process ",
         "options": {}
       },
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.2,
       "position": [
-        -112,
-        48
+        48,
+        272
       ],
-      "id": "9848c842-0f96-46fa-b1c2-24b9ece57287",
+      "id": "5dacb6c2-0ae9-447d-b309-5237dfb15a0f",
       "name": "Send a message",
       "webhookId": "ae5630d7-1bac-47a8-b762-db3f3224ed68",
       "credentials": {
         "gmailOAuth2": {
-          "id": "JNRivC1BqHNhe5ZB",
+          "id": "08zNOxwX9CEzx11T",
           "name": "Gmail account"
         }
       }
@@ -148,15 +148,15 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.2,
       "position": [
-        -112,
-        256
+        48,
+        464
       ],
-      "id": "68ac5540-2cb4-40e8-ae64-8332488ebf37",
+      "id": "1ba82224-d3e5-40c2-894c-1328be87ea11",
       "name": "Send a message1",
       "webhookId": "f63f5be7-583f-4ab0-abce-f1b2d5265722",
       "credentials": {
         "gmailOAuth2": {
-          "id": "JNRivC1BqHNhe5ZB",
+          "id": "08zNOxwX9CEzx11T",
           "name": "Gmail account"
         }
       }
@@ -248,14 +248,14 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        160,
-        256
+        304,
+        464
       ],
-      "id": "37b7bcaa-38a8-4d60-bf39-9a13c3e35a36",
+      "id": "00da220f-7c89-4cbe-8a08-28ef5377b21f",
       "name": "Append row in sheet",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "wOMjpDAwPtzXsunZ",
+          "id": "VKyFfaqQkmtOKWAH",
           "name": "Google Sheets account"
         }
       }
@@ -289,15 +289,99 @@
       "type": "n8n-nodes-base.googleSheetsTrigger",
       "typeVersion": 1,
       "position": [
-        -432,
-        -192
+        -256,
+        16
       ],
-      "id": "97e8c4f8-7e6f-4302-be96-0fabb615e3ea",
+      "id": "25ebb664-2865-46aa-98e6-c4c220321af6",
       "name": "First Node",
       "credentials": {
         "googleSheetsTriggerOAuth2Api": {
-          "id": "fSheC3T8FxsgquM7",
+          "id": "bfPuERL31KV8Q8AD",
           "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1f0ZUYRwEkgx0qwuFCuQK6_ovGJwHe9bp69WDFelrmoQ",
+          "mode": "list",
+          "cachedResultName": "Sent_questions",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1f0ZUYRwEkgx0qwuFCuQK6_ovGJwHe9bp69WDFelrmoQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1f0ZUYRwEkgx0qwuFCuQK6_ovGJwHe9bp69WDFelrmoQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $('If').item.json.Email }}",
+            "name": "={{ $('If').item.json.Name }}",
+            "city": "={{ $('If').item.json.city }}",
+            "contract type": "={{ $('If').item.json['Type of Contract'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "city",
+              "displayName": "city",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "contract type",
+              "displayName": "contract type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        256,
+        272
+      ],
+      "id": "a5a43157-53c4-4f4d-905d-0a355daa054e",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VKyFfaqQkmtOKWAH",
+          "name": "Google Sheets account"
         }
       }
     }
@@ -376,17 +460,31 @@
           }
         ]
       ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
   },
-  "versionId": "39765605-11ef-4076-b2ce-32de0cfdec6f",
+  "versionId": "afddf4f3-a9ad-43b2-8a28-c20fd543105e",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "5bfc75bda0a796120f60112e1f8154cddf837d4498cfaaf2bf11ff28f6bf4741"
+    "instanceId": "558d88703fb65b2d0e44613bc35916258b0f0bf983c5d4730c00c424b77ca36a"
   },
-  "id": "pzo4AbpGIbL5f5LB",
+  "nodeGroups": [],
+  "id": "wwAeuMQprV0jLocc",
   "tags": []
 }
